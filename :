@@ -1,0 +1,26 @@
+#include <iostream>
+#include "ACAutomaton.hpp"
+
+ACAutomaton::~ACAutomaton() {
+  // destoryAll(root);
+}
+
+void ACAutomaton::build() {
+
+}
+
+void ACAutomaton::setTransition() {
+
+}
+
+void ACAutomaton::match() {
+
+}
+
+void ACAutomaton::addPattern(string pattern) {
+
+}
+
+void ACAutomaton::destoryAll(ACNode* n) {
+
+}
