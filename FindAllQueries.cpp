@@ -1,9 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include "ACNode.hpp"
 #include "ACAutomaton.hpp"
 #include "ACAutomaton.cpp"  // should link .cpp since constructor in it
+#include "Timer.hpp"
+#include "Timer.cpp"
 
 using namespace std;
 
@@ -62,10 +65,11 @@ void match_db(ACAutomaton& dict, istream& database) {
 
 int main(int argc, char*argv[]) {
 
-  if (argc != 3) {
+  if (argc != 4) {
     cout << "Incorrect number of arguments." << endl;
     cout << "\t First argument: dictionary file." << endl;
     cout << "\t Second argument: database file." << endl;
+    cout << "\t Third argument: 1 - print result, 0 - no printing" << endl;
     cout << endl;
     exit(-1);
   }
@@ -74,23 +78,23 @@ int main(int argc, char*argv[]) {
   ifstream din(argv[2], ios_base::in);
 
   ACAutomaton* ACT = new ACAutomaton();
+  Timer T;
 
-  cout << "Loading dictionary: " << endl;
+  /* Load the dictionart */
   load_dict(*ACT, qin);
-  cout << ACT->GetSize() << " patterns loaded." << endl;
+  // cout << ACT->GetSize() << " patterns loaded." << endl;
+
+  /* Build the trei recurrsion */
   ACT->build();
+
+  /* Match the database and print */
+  T.begin_timer();
   match_db(*ACT, din);
+  cout << "Tunning time \t" << T.end_timer() << " nanoseconds" << endl;
 
-/*
-  ACT->insert("he");
-  ACT->insert("she");
-  ACT->insert("his");
-  ACT->insert("hers");
-  ACT->build();
-  ACT->match("ushers");
-*/
-
-  ACT->print();
+  if (stoi(argv[3])) {
+    ACT->print();
+  }
 
   qin.close();
   din.close();

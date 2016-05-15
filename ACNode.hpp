@@ -1,7 +1,6 @@
 #ifndef ACNODE_HPP
 #define ACNODE_HPP
 
-#include <set>
 #include <vector>
 #include <iostream>
 
@@ -11,9 +10,9 @@ using namespace std;
 
 class ACNode {
  private:
-  vector<ACNode*> nextNode;
-  ACNode* failNode;
-  int wordNum;
+  vector<ACNode*> nextNode;  // pointers to next nodes of a MWTrie
+  ACNode* failNode;  // pointing to the last "correct" state
+  int wordNum;  // number indicating a pattern stored in the trie
 
   ACNode() {
     nextNode = vector<ACNode*>(CHAR_SIZE, 0);

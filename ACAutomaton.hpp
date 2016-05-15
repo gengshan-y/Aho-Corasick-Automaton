@@ -19,12 +19,17 @@ class ACAutomaton{
 
   /** Build the transition edge **/
   void build();
+ 
+  /** Match the target with patterns in the trie **/
   void match(string target);
+  
+  /** Print the found pattern **/
   void print();
 
  private:
-  ACNode* root;
-  vector <pair <string, vector<int>>> patternPos;
+  ACNode* root;  // root of a multi-way search trie
+  vector <pair <string, vector<int>>> patternPos;  // <pattern, positions> pair
+  /** Destory subtrie n **/
   void destoryAll(ACNode* n);
 };
 

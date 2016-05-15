@@ -5,7 +5,7 @@
 
 ACAutomaton::ACAutomaton() {
   root = new ACNode();
-  root->failNode = root;
+  root->failNode = root;  // the sub-string of a "" is ""
 }
 
 ACAutomaton::~ACAutomaton() {
@@ -30,7 +30,8 @@ bool ACAutomaton::insert(string word) {
     if (!tempNode->nextNode[word[i]]) {  // if empty, add node
       if (!word[i+1]) {  // if at the end
         tempNode->nextNode[word[i]] = new ACNode();
-        tempNode->nextNode[word[i]]->wordNum = patternPos.size();
+        // set num as the current size of pattern pair
+        tempNode->nextNode[word[i]]->wordNum = patternPos.size();  
       }
       else {
         tempNode->nextNode[word[i]] = new ACNode();
@@ -47,8 +48,8 @@ bool ACAutomaton::insert(string word) {
     isInserted = true;
   }
 
-  /* updata pattern-position pair */
-  pair<string, vector<int>> tempPair(word, vector<int>());  // -1 position denotes null
+  /* updata pattern-position pair, -1 position denotes null */
+  pair<string, vector<int>> tempPair(word, vector<int>()); 
   patternPos.push_back(tempPair);
 
   return isInserted;
@@ -59,11 +60,11 @@ void ACAutomaton::build() {
   ACNode* tempNode;
   ACNode* lastFail;
 
-  /** Set the depth 1 nodes **/
+  /** Set the failpointer of depth 1 nodes **/
   for (int i = 0; i < CHAR_SIZE; i++) {
     if (root->nextNode[i]) {
-      root->nextNode[i]->failNode = root;
-      q.push(root->nextNode[i]);
+      root->nextNode[i]->failNode = root;  // mismatch of "a" -> start from ""
+      q.push(root->nextNode[i]);  // BFS to update failpointer
     }
   }
 
@@ -74,19 +75,18 @@ void ACAutomaton::build() {
       if (tempNode->nextNode[i]) {
       /* push all the existing children */
         q.push(tempNode->nextNode[i]);
-      /* set fail transition node for each childrenn */
+      /* set fail pointer for each childrenn */
         lastFail = tempNode;
+        /* calculate the longest sub-string */
         while (lastFail->failNode->nextNode[i] == 0 && lastFail != root)
           lastFail = lastFail->failNode;
         if (lastFail == root)  // if already have no substring
           tempNode->nextNode[i]->failNode = root;
         else
           tempNode->nextNode[i]->failNode = lastFail->failNode->nextNode[i];
-        
       }
     } 
   }
-
 }
 
 void ACAutomaton::match(string target) {
@@ -97,11 +97,11 @@ void ACAutomaton::match(string target) {
 
   ACNode* tempNode = root;
   int i = 0;
-  pair <string, vector <int>>* pattPosPair;
+  pair <string, vector <int>>* pattPosPair;  // temp pair to update patternPair
 
   while (target[i]) {
     /* check if pattern is found */
-    if (tempNode->wordNum != -1) {
+    if (tempNode->wordNum != -1) {  // is a pattern
       pattPosPair = &(patternPos[tempNode->wordNum]);
       get<1>(*pattPosPair).push_back(i-get<0>(*pattPosPair).size());
     }
@@ -111,11 +111,12 @@ void ACAutomaton::match(string target) {
     /* if tempNode is root, we have no substring for this pattern */
     else if (tempNode != root) {
       tempNode = tempNode->failNode;
-      continue;
+      continue;  // dont move database string if fail
     }
     i++;
   }
 
+  /* update the last pattern */
   if (tempNode->wordNum != -1) {
     pattPosPair = &patternPos[tempNode->wordNum];
     get<1>(*pattPosPair).push_back(i-get<0>(*pattPosPair).size());
@@ -125,7 +126,7 @@ void ACAutomaton::match(string target) {
 void ACAutomaton::print() {
   for (auto it = patternPos.begin(); it != patternPos.end(); it++ ) {
     cout << get<0>(*it) << ":";
-    if (!get<1>(*it).size())
+    if (!get<1>(*it).size())  // havent found this pattern
       cout << " -1" << endl;
     else {
       for (unsigned i = 0; i < get<1>(*it).size(); i++)
