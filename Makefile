@@ -2,16 +2,16 @@ CC=g++
 CXXFLAGS=-std=c++11 -gdwarf-3 -Wall
 LDFLAGS=-g
 
-all: main
+all: FindAllQueries
 
-main: main.o
+FindAllQueries: FindAllQueries.o
 
-main.o: ACNode.o ACAutomaton.o
+FindAllQueries.o: ACNode.o ACAutomaton.o
 
 ACNode.o: ACNode.hpp
 
 ACAutomaton.o: ACAutomaton.hpp
 
 clean:
-	rm -f main *.o core* *~
+	rm -f FindAllQueries *.o core* *~
 

@@ -11,6 +11,9 @@ class ACAutomaton{
   /** Destructor **/
   ~ACAutomaton();
 
+  /** Get the size of the dictionary **/
+  unsigned int GetSize();
+
   /** Insert a word to the trie, if succeed return true **/
   bool insert(string word);
 

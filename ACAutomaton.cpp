@@ -6,15 +6,14 @@
 ACAutomaton::ACAutomaton() {
   root = new ACNode();
   root->failNode = root;
-/*  
-  for (int i = 0; i < CHAR_SIZE; i++) {
-    root->nextNode[i] = root;
-  }
-*/
 }
 
 ACAutomaton::~ACAutomaton() {
   destoryAll(root);
+}
+
+unsigned int ACAutomaton::GetSize() {
+  return patternPos.size();
 }
 
 bool ACAutomaton::insert(string word) {
@@ -58,6 +57,7 @@ bool ACAutomaton::insert(string word) {
 void ACAutomaton::build() {
   queue<ACNode*> q;
   ACNode* tempNode;
+  ACNode* lastFail;
 
   /** Set the depth 1 nodes **/
   for (int i = 0; i < CHAR_SIZE; i++) {
@@ -75,10 +75,14 @@ void ACAutomaton::build() {
       /* push all the existing children */
         q.push(tempNode->nextNode[i]);
       /* set fail transition node for each childrenn */
-        if (tempNode->failNode->nextNode[i] == 0)
+        lastFail = tempNode;
+        while (lastFail->failNode->nextNode[i] == 0 && lastFail != root)
+          lastFail = lastFail->failNode;
+        if (lastFail == root)  // if already have no substring
           tempNode->nextNode[i]->failNode = root;
         else
-          tempNode->nextNode[i]->failNode = tempNode->failNode->nextNode[i];
+          tempNode->nextNode[i]->failNode = lastFail->failNode->nextNode[i];
+        
       }
     } 
   }
@@ -96,6 +100,7 @@ void ACAutomaton::match(string target) {
   pair <string, vector <int>>* pattPosPair;
 
   while (target[i]) {
+    /* check if pattern is found */
     if (tempNode->wordNum != -1) {
       pattPosPair = &(patternPos[tempNode->wordNum]);
       get<1>(*pattPosPair).push_back(i-get<0>(*pattPosPair).size());
@@ -103,10 +108,10 @@ void ACAutomaton::match(string target) {
     if (tempNode->nextNode[target[i]]) {
       tempNode = tempNode->nextNode[target[i]]; 
     }
-    else {
+    /* if tempNode is root, we have no substring for this pattern */
+    else if (tempNode != root) {
       tempNode = tempNode->failNode;
-      if (tempNode != root)
-        continue;
+      continue;
     }
     i++;
   }
@@ -120,10 +125,13 @@ void ACAutomaton::match(string target) {
 void ACAutomaton::print() {
   for (auto it = patternPos.begin(); it != patternPos.end(); it++ ) {
     cout << get<0>(*it) << ":";
-    for (unsigned i = 0; i < get<1>(*it).size(); i++) {
-      cout << " " << get<1>(*it)[i];
+    if (!get<1>(*it).size())
+      cout << " -1" << endl;
+    else {
+      for (unsigned i = 0; i < get<1>(*it).size(); i++)
+        cout << " " << get<1>(*it)[i];
+      cout << endl;
     }
-    cout << endl;
   }
 }
 
