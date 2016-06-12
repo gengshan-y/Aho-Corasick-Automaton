@@ -1,11 +1,12 @@
-1 How to run FindAllQueries on all the databases?
+This is an extra coursework from UCSD CSE100 Advanced Data Structures.
+The task is to implement Aho-Corasick Automation, and apply/benchmark 
+on multiple pattern matching problems.
 
-under command line:
-    chmod u+x run.sh
-    path_to_this_floder/run.sh
+To run FindAllQueries on all the databases:
 
-2 How to run FindAllQueries generally and show results?
+$ path_to_this_floder/run.sh
 
-under command line:
-    make
-    ./FindAllQueries path_to_dictionary path_to_database 1
+To run FindAllQueries generally and show results
+
+$ make
+$ ./FindAllQueries path_to_dictionary path_to_database 1
