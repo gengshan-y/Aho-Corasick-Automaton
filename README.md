@@ -5,10 +5,9 @@ on multiple pattern matching problems.
 
 To run FindAllQueries on all the databases:
 
-<`$ path_to_this_floder/run.sh`>
+`$ path_to_this_floder/run.sh`
 
 To run FindAllQueries generally and show results
 
-<`$ make
-$ ./FindAllQueries path_to_dictionary path_to_database 1
-`>
+`$ make`
+`$ ./FindAllQueries path_to_dictionary path_to_database 1`
