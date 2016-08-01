@@ -10,4 +10,5 @@ To run FindAllQueries on all the databases:
 To run FindAllQueries generally and show results
 
 `$ make`
+
 `$ ./FindAllQueries path_to_dictionary path_to_database 1`
