@@ -1,7 +1,7 @@
 # Aho-Corasick-Automaton
 Extra coursework for UCSD CSE100 Advanced Data Structures, SP16.
-The task is to implement Aho-Corasick Automation, and apply/benchmark 
-on multiple pattern matching problems.
+
+The task is to implement Aho-Corasick Automation, and apply/benchmark on multiple pattern matching problems.
 
 To run FindAllQueries on all the databases:
 
